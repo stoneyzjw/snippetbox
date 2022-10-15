@@ -40,8 +40,9 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
     ts, err := template.ParseFiles(files...)
     if err != nil {
         // log.Print(err.Error())
-        app.errorLog.Print(err.Error())
-        http.Error(w, "Internal Server Error", 500)
+        // app.errorLog.Print(err.Error())
+        app.serverError(w, err) // Use the serverError helper
+        // http.Error(w, "Internal Server Error", 500)
         return
     }
 
@@ -58,7 +59,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
     err = ts.ExecuteTemplate(w, "base", nil)
     if err != nil {
         // log.Print(err.Error())
-        app.errorLog.Print(err.Error())
+        // app.errorLog.Print(err.Error())
+        app.serverError(w, err) // Use the serverError() helper
         http.Error(w, "Internal Server Error", 500)
     }
 }
@@ -76,7 +78,8 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
      */
     id, err := strconv.Atoi(r.URL.Query().Get("id"))
     if err != nil || id < 1 {
-        http.NotFound(w, r)
+        // http.NotFound(w, r)
+        app.notFound(w)
         return
     }
     /* 
@@ -101,7 +104,8 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
          * subsequent code is not executed 
          */ 
         w.Header().Set("Allow", http.MethodPost)
-        http.Error(w, "Method Not Allowed\n", http.StatusMethodNotAllowed)
+        // http.Error(w, "Method Not Allowed\n", http.StatusMethodNotAllowed)
+        app.clientError(w, http.StatusMethodNotAllowed) // Use the clientError() helper
         // w.WriteHeader(405)
         // w.Write([]byte("Method Not Allowed\n"))
         return

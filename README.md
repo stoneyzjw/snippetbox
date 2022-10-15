@@ -208,3 +208,10 @@ For applications where all your handlers are in the same package like ours, a ne
 dependencies is to put them into a custom **application** struct, and then define your handler
 functions as methods against **application**. 
 
+## Additonal information 
+
+### Closures for dependency injection 
+
+The pattern that we're using to inject dependencies won't work if your handlers are spread across
+multiple packages. In that case, an alternative approach is to create a config package exporting an
+Application struct and have your handler functions close over this to form a closure. Very roughly:
