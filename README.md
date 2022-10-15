@@ -99,3 +99,18 @@ This is useful because it prevents other codebases from importing and relying on
 
 Let's inject a bit of life into the project and develop a proper home page for our Snippetbox web
 application. Over the next couple of chapters we'll work towards creating a page which looks like this: 
+
+## The http.Fileserver handler 
+
+Go's net/http package ships with a built-in http.FileServer handler which you can use to serve files
+over HTTP from a specific directory. Let's add a new route to our application so that all requests
+which begin with "/static/" are handled using this, like so:
+
+|Mehtod|Pattern|Handler|Action|
+|:---|:--|:--|:--|
+|ANY|/|home|Display the home page|
+|ANY|/snippet/view?id=1|snippetView|Display a specific snippet|
+|POST|/snippet/create|snippetCreate|Create a new snippet|
+|ANY|/static|http.FileServer|Serve a specific static file|
+
+
