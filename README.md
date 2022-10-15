@@ -215,3 +215,10 @@ functions as methods against **application**.
 The pattern that we're using to inject dependencies won't work if your handlers are spread across
 multiple packages. In that case, an alternative approach is to create a config package exporting an
 Application struct and have your handler functions close over this to form a closure. Very roughly:
+
+## Isolating the application routes 
+
+Whiel we're refactoring our code there's one more change worth making 
+
+Our **main()** functioin is beginning to get a bit crowded, so to keep it clear and focused I'd like to
+move the route declarations for the application into a standalone **routes.go** file. 
