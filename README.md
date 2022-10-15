@@ -148,3 +148,38 @@ home struct - which in turn writes the HTTP response.
 Now, creating an object just so we can implement a ServeHTTP() method on it is long-winded and a bit
 confusing. Which is why in practice it's far more common to write your handlers as a normal function
 (like we have been so far). For example: 
+
+# Chapter 3
+
+## Configuration and error handling 
+
+In this section of the book we're going to do some housekeeping. We won't add much new functionality,
+but instead focus on making improvements that'll make it easier to manage our application as it grows. 
+
+You'll learn how to: 
+1. Set configuration settings for you application at runtime in an easy and idiomatic way using
+   command-line flags. 
+
+2. Improve your application log messages to include more information, and manage them differently
+   depending on the type (or level) of log messages. 
+
+3. Make dependencies available to your handlers in a way that's extensible, type-safe, and doesn't get
+   in a say when it comes to writing tests. 
+
+4. Centralize error handling so that you don't need to repeat yourself when writing code. 
+
+## Managing configuration settings 
+
+Our web application's main.go file currently contains a couple of hard-coded configuration settings: 
+
++ The network address for the server to listen on (currently ":4000")
++ The file path for the static files directory (currently "./ui/static") 
+
+Having these hard-coded isn't ideal. There's no separation between our configuration setttings and
+code, and we can't change the settings at runtime (which is important if you need different settings
+for development, testing and productioin environments).
+
+In this chapter we'll start to improve that, and make the network address for our server configuration
+at runtime. 
+
+
