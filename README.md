@@ -193,3 +193,18 @@ will also call os.Exit(1) after writing the message, causing the application to 
 
 In our application, we can break apart our log messages into two distinct types - or levels. The first
 type is **informational messages** 
+
+## Dependency injection 
+
+There's one more problem with our logging that we need to address. If you open up your **handlers.go**
+file you'll notice that the **home** handler function is still writting error messages using Go's
+standard logger, not the errorLog logger that we want to be using. 
+
+There are a few different ways to do this, the simplest being to just put the dependencies in global
+variables. But in general, it is good practice to inject dependencies into your handlers. It makes your
+code more explicit, less error-prone and easier to unit test than if you use global variables. 
+
+For applications where all your handlers are in the same package like ours, a neat way to inject
+dependencies is to put them into a custom **application** struct, and then define your handler
+functions as methods against **application**. 
+

@@ -4,14 +4,18 @@ import (
     "fmt"
     "net/http"
     "strconv"
-    "log"
+    // "log"
     "html/template"
 )
 
 // Define a home handler function which writes a byte slice containing 
 // "Hello from Snippetbox" as the response body. 
 
-func home(w http.ResponseWriter, r *http.Request) {
+/* 
+ * Change the signature of the home handler so it is defined as a method against 
+ * *application
+ */
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path != "/" {
         http.NotFound(w, r)
         return
@@ -35,7 +39,8 @@ func home(w http.ResponseWriter, r *http.Request) {
      */
     ts, err := template.ParseFiles(files...)
     if err != nil {
-        log.Print(err.Error())
+        // log.Print(err.Error())
+        app.errorLog.Print(err.Error())
         http.Error(w, "Internal Server Error", 500)
         return
     }
@@ -52,13 +57,18 @@ func home(w http.ResponseWriter, r *http.Request) {
       */
     err = ts.ExecuteTemplate(w, "base", nil)
     if err != nil {
-        log.Print(err.Error())
+        // log.Print(err.Error())
+        app.errorLog.Print(err.Error())
         http.Error(w, "Internal Server Error", 500)
     }
 }
 
 // Add a snippetView handler function. 
-func snippetView(w http.ResponseWriter, r *http.Request) {
+/*
+ * Change the signature of the snippetView handler so it is defined as a method 
+ * against *application. 
+ */
+func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
     /* Extract the value of the id parameter, from the query string and try to 
      * convert it to an integer using the strconv.Atoi() function. If it can't 
      * be convert to an integer, or the value is less than 1, we return a 404 page 
@@ -78,7 +88,11 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 }
 
 // Add a snippetCreate handler function 
-func snippetCreate(w http.ResponseWriter, r *http.Request) {
+/* 
+ * Change the signature of the snippetCreate handler so it is defined as a method 
+ * against *application
+ */
+func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
     // Use r.Method to check whether the request is using POST or not. 
     if r.Method != "POST" {
         /* If it's not, use the w.WriteHeader() method to send a 405 status 
