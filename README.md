@@ -113,4 +113,38 @@ which begin with "/static/" are handled using this, like so:
 |POST|/snippet/create|snippetCreate|Create a new snippet|
 |ANY|/static|http.FileServer|Serve a specific static file|
 
+## The http.Handler interface 
 
+Before we go any further there's a little theory that we should cover. It's a bit complicated, so if
+you find this chapter hard-going don't worry. Carry on with the application build and circle back to it
+later once you're more familiar with Go. 
+
+In the previous chapters I've thrown around the term handler without explaining what it truly means.
+Strictly speaking, what we mean by handler is an object which satifies the http.Handler interface. 
+    type Handler interface {
+        ServeHTTP(ResponseWriter, *Request)
+    }
+In simple terms, this basically means that to be a handler an object must have a ServeHTTP() method
+with the exact signature
+    ServeHTTP(http.ResponseWriter, *http.Request)
+So in its simplest form a handler might look something like this: 
+    type home struct { }
+
+    func (h *home) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte("This is m home page"))
+    }
+Here we have an object (in this case it's a home struct, but it could equally be a string or function
+or anything else), and we've implemented a method with the signature ServeHTTP(http.ResponseWriter,
+\*http.Request) on it. That's alll we need to make a handler. 
+
+You could then register this with a servremux using the Handle method like so: 
+    mux := http.NewServeMux() 
+    mux.Handle("/", &home{})
+When this servemux receives a HTTP request for '/', it will then call the ServeHTTP() method of the
+home struct - which in turn writes the HTTP response. 
+
+## Handler functions 
+
+Now, creating an object just so we can implement a ServeHTTP() method on it is long-winded and a bit
+confusing. Which is why in practice it's far more common to write your handlers as a normal function
+(like we have been so far). For example: 
