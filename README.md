@@ -182,4 +182,14 @@ for development, testing and productioin environments).
 In this chapter we'll start to improve that, and make the network address for our server configuration
 at runtime. 
 
+## Leveled logging 
 
+At the moment in our **main.go** file we're outputting log messages using the **log.Printf()** and
+**log.Fatal()** functions. 
+
+Both these functions output messages via Go's standard logger, which - by default - prefixes messages
+with the local date and time and writes them to the standard error stream. The log.Fatal() function
+will also call os.Exit(1) after writing the message, causing the application to immediately exit. 
+
+In our application, we can break apart our log messages into two distinct types - or levels. The first
+type is **informational messages** 
