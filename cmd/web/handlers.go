@@ -4,19 +4,10 @@ import (
     "fmt"
     "net/http"
     "strconv"
-    // "log"
-    "html/template"
     "errors" 
     "github.com/stoneyzjw/snippetbox/internal/models"
 )
 
-// Define a home handler function which writes a byte slice containing 
-// "Hello from Snippetbox" as the response body. 
-
-/* 
- * Change the signature of the home handler so it is defined as a method against 
- * *application
- */
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path != "/" {
         http.NotFound(w, r)
@@ -28,56 +19,13 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
         app.serverError(w, err) 
         return
     }
-
-    /*
-     * Initialize a slice containing the paths to the two files. It's important 
-     * to note that the file containing our base template must be the *first* 
-     * file in the slice
-     */
-    files := []string {
-        "./ui/html/base.tmpl",
-        "./ui/html/partials/nav.tmpl",
-        "./ui/html/pages/home.tmpl",
-    }
-    /* 
-     * Use the template.ParseFiles() functions to read the template file into a 
-     * template set. If there's an error, we log the detailed error message and use 
-     * the http.Error() funtion to send a generic 500 Internal Server Error 
-     * response to the user.
-     */
-    ts, err := template.ParseFiles(files...)
-    if err != nil {
-        app.serverError(w, err)
-    }
-
-    /* Create an instance of a templateData struct holding the slice of snippets. */ 
-    data := &templateData {
-        Snippets: snippets,
-    }
-
-    /* 
-     * We then use the Execute() method on the template set to write the 
-     * template content as the response body. The last parameter to Execute() 
-     * represents any dynamic data that we want to pass in, which for now we'll 
-     * leave as nil.
-     */
-     /*
-      * Use the ExecuteTemplate() method to write the content of the "base" 
-      * template as the response body.
-      */
-    err = ts.ExecuteTemplate(w, "base", data)
-    if err != nil {
-        app.serverError(w, err)
-    }
+    // Use the new render helper. 
+    app.render(w, http.StatusOK, "home.tmpl", &templateData {Snippets: snippets})
 }
 
-// Add a snippetView handler function. 
-/*
- * Change the signature of the snippetView handler so it is defined as a method 
- * against *application. 
- */
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
-    /* Extract the value of the id parameter, from the query string and try to 
+    /*
+     * Extract the value of the id parameter, from the query string and try to 
      * convert it to an integer using the strconv.Atoi() function. If it can't 
      * be convert to an integer, or the value is less than 1, we return a 404 page 
      * not found reponse
@@ -102,47 +50,16 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
         }
         return 
     }
-    /*
-     * Initialize a slice containing the paths to the view.tmpl file, 
-     * plus the base layout and navigation partial that we made earlier. 
-     */ 
-
-    files := []string {
-        "./ui/html/base.tmpl",
-        "./ui/html/partials/nav.tmpl",
-        "./ui/html/pages/view.tmpl",
-    }
-    // Parse the template files ...
-    ts, err := template.ParseFiles(files...) 
-    if err != nil {
-        app.serverError(w, err)
-        return
-    }
-
-    /* Create an instance of a templateData struct holding the snippet data. */ 
-    data := &templateData {
-        Snippet: snippet,
-    }
-    /*
-     * And then execute them. Notice how we are passing in the snippet 
-     * data (a models.Snippet struct) as the final parameter?
-     */ 
-    err = ts.ExecuteTemplate(w, "base", data)
-    if err != nil {
-        app.serverError(w, err)
-    }
+    // Use the new render helper 
+    app.render(w, http.StatusOK, "view.tmpl", &templateData{Snippet: snippet})
 }
 
-// Add a snippetCreate handler function 
-/* 
- * Change the signature of the snippetCreate handler so it is defined as a method 
- * against *application
- */
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
     // Use r.Method to check whether the request is using POST or not. 
     // if r.Method != "POST" {
     if r.Method != http.MethodPost {
-        /* If it's not, use the w.WriteHeader() method to send a 405 status 
+        /*
+         * If it's not, use the w.WriteHeader() method to send a 405 status 
          * code and the w.Write() method to write a "Method Not Allowed" 
          * response body. We then return from the function so that the 
          * subsequent code is not executed 
