@@ -10,7 +10,7 @@
         <pre><code>{{.Content}}</code></pre>
         <div class='metadata'>
             <!-- Use the new template funtion herer --> 
-            <time>Created: {{humanDate .Created}}</time>
+            <time>Created: {{.Created | humanDate }}</time>
             <time>Expires: {{humanDate .Expires}}</time>
         </div>
     </div>
