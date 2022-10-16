@@ -357,3 +357,34 @@ To illustrate this, let's create a custom **humanDate()** function which outputs
 There are two steps to do this: 
 1. We need to create a template.FuncMap object containing the custom **humanDate()** function 
 2. We need to use the **template.Funcs()** method to register this before parsing the templates. 
+
+# Middleware 
+
+When you're building a web application there's probably some shared functioinality that you want to use
+for many (or even all) HTTP requests. For example, you might want to log every request, compress every
+response, or check a cache before passing the request to your handlers. 
+
+A common way of organizing this shared functionality is to set it up as middleware. This is essentially
+some self-contained code which independency acts on a request before or after your normal application
+handlers. 
+
+In this section of the book you'll learn: 
+1. An idiomatic pattern for **building and using custom middleware** which is compatible with
+   **net/http** and many third-party packages. 
+
+2. How to create middleware which **sets useful security headers** on every HTTP response. 
+
+3. How to create middleware which **logs the request** received by your application 
+
+4. How to create middleware which **recovers panics** so that they are gracefully handled by your
+   application 
+
+5. How to create and use composable **middleware chains** to help manage and organize your middleware. 
+
+## How middleware works 
+
+## Setting security headers 
+
+Let's put the pattern we learned in the previous chapter to use, and make our own middleware which
+automatically adds the following HTTP security headers to every response, inline with current OWASP
+guidance. 
