@@ -388,3 +388,9 @@ In this section of the book you'll learn:
 Let's put the pattern we learned in the previous chapter to use, and make our own middleware which
 automatically adds the following HTTP security headers to every response, inline with current OWASP
 guidance. 
+
+## Request Logging 
+
+Let's continue in the same vein and add some middleware to log HTTP requests. Specifically, we're going
+to use the information logger that we created earlier to record the IP address of the user, and which
+URL and method are being requested. 
