@@ -282,14 +282,9 @@ three more which you can use to control the display of dynamic data - {{if}}, {{
 
 |Action |Description |
 |:----|:---|
-|{{if .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty then render the content C1, otherwise
-render the content C2.|
-|{{with .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty, then set dot to the value of **.Foo**
-and render the content C1, otherwise render the content C2. |
-|{{range .Foo}} C1 {{else}} C2 {{end}} | If the length of **.Foo** is greater than zero then loop over
-each element, setting dot to the value of each element and rendering the content C1. If the length of
-**.Foo** is zero then renader the content C2. The underlying type of **.Foo** must be an array, slice,
-map, or channel. |
+|{{if .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty then render the content C1, otherwise render the content C2.|
+|{{with .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty, then set dot to the value of **.Foo** and render the content C1, otherwise render the content C2. |
+|{{range .Foo}} C1 {{else}} C2 {{end}} | If the length of **.Foo** is greater than zero then loop over each element, setting dot to the value of each element and rendering the content C1. If the length of **.Foo** is zero then renader the content C2. The underlying type of **.Foo** must be an array, slice, map, or channel. |
 
 There are a few things about these actions to point out: 
 1. For all three actions the {{else}} clause is optional. For instance, you can write {{if .Foo}} C1
@@ -312,10 +307,8 @@ functions here, but the most important ones are:
 |{{ne .Foo .Bar}} | Yields true if **.Foo** is not equal to **.Bar** |
 |{{not .Foo}} | Yields the boolean negation of **.Foo** | 
 |{{or .Foo .Bar}} | Yields **.Foo** if **.Foo** is not empty; otherwise yields **.Bar** |
-|{{index .Foo i}} | Yields the value of **.Foo** at index **i**. The underlying type of **.Foo** must
-be a map, slice or array, and **i** must be an integer value. |
-|{{printf "%s-%s" .Foo .Bar}} | Yields a formatted string containing the **.Foo** and **.Bar** alues.
-Works in the same way as fmt.Sprintf(). |
+|{{index .Foo i}} | Yields the value of **.Foo** at index **i**. The underlying type of **.Foo** must be a map, slice or array, and **i** must be an integer value. |
+|{{printf "%s-%s" .Foo .Bar}} | Yields a formatted string containing the **.Foo** and **.Bar** alues. Works in the same way as fmt.Sprintf(). |
 |{{len .Foo}} | Yields the length of **.Foo** as an integer. |
 |{{$bar := len .Foo}} | Assign the length of **.Foo** to the template variable **$bar** |
 
