@@ -5,7 +5,7 @@ import (
     "net/http"
     "strconv"
     // "log"
-    "html/template"
+    // "html/template"
     "errors" 
     "github.com/stoneyzjw/snippetbox/internal/models"
 )
@@ -22,32 +22,42 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
         http.NotFound(w, r)
         return
     }
+
+    snippets, err := app.snippets.Latest() 
+    if err != nil {
+        app.serverError(w, err) 
+        return
+    }
+
+    for _, snippet := range snippets {
+        fmt.Fprintf(w, "%+v\n", snippet)
+    }
     // w.Write([]byte("Hello from Snippetbox\n"))
     /*
      * Initialize a slice containing the paths to the two files. It's important 
      * to note that the file containing our base template must be the *first* 
      * file in the slice
      */
-    files := []string {
-        "./ui/html/base.tmpl",
-        "./ui/html/partials/nav.tmpl",
-        "./ui/html/pages/home.tmpl",
-    }
+    // files := []string {
+        // "./ui/html/base.tmpl",
+        // "./ui/html/partials/nav.tmpl",
+        // "./ui/html/pages/home.tmpl",
+    // }
     /* 
      * Use the template.ParseFiles() functions to read the template file into a 
      * template set. If there's an error, we log the detailed error message and use 
      * the http.Error() funtion to send a generic 500 Internal Server Error 
      * response to the user.
      */
-    ts, err := template.ParseFiles(files...)
-    if err != nil {
+    // ts, err := template.ParseFiles(files...)
+    // if err != nil {
         // log.Print(err.Error())
         // app.errorLog.Print(err.Error())
-        app.serverError(w, err) // Use the serverError helper
+        // app.serverError(w, err) // Use the serverError helper
         // http.Error(w, "Internal Server Error", 500)
-        return
-    }
-
+        // return
+    // }
+//
     /* 
      * We then use the Execute() method on the template set to write the 
      * template content as the response body. The last parameter to Execute() 
@@ -58,13 +68,13 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
       * Use the ExecuteTemplate() method to write the content of the "base" 
       * template as the response body.
       */
-    err = ts.ExecuteTemplate(w, "base", nil)
-    if err != nil {
+    // err = ts.ExecuteTemplate(w, "base", nil)
+    // if err != nil {
         // log.Print(err.Error())
         // app.errorLog.Print(err.Error())
-        app.serverError(w, err) // Use the serverError() helper
-        http.Error(w, "Internal Server Error", 500)
-    }
+        // app.serverError(w, err) // Use the serverError() helper
+        // http.Error(w, "Internal Server Error", 500)
+    // }
 }
 
 // Add a snippetView handler function. 
