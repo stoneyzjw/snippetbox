@@ -222,3 +222,53 @@ Whiel we're refactoring our code there's one more change worth making
 
 Our **main()** functioin is beginning to get a bit crowded, so to keep it clear and focused I'd like to
 move the route declarations for the application into a standalone **routes.go** file. 
+
+# Database-driven responses 
+
+For our Snippetbox web application to become truly useful we need somewhere to store (or persist) the
+data entered by users, and the ability to query this data store dynamically at runtime. 
+
+There are many different data stores we could use for our application - each with different pros and
+cons - but we'll opt for the popular relational database MySQL. 
+
+## Setting up MySQL 
+
+If you're following along, you'll need to install MySQL on your computer at this point. The offical
+MySQL documentation contains comprehensive installation instructions for all types of operating
+systems, but if you're using Mac OS you should be able to install it with: 
+    brew install mysql 
+Or if you're using a Linux distribution which supports apt (like Debian and Ubuntu) you can install it
+with: 
+    sudo apt install mysql-server 
+
+    /* for a given DSN */
+    func openDB(dsn string) (*sql.DB, error) {
+        db, err := sql.Open("mysql", dsn)
+        if err != nil {
+            return nil, err 
+        }
+        if err = db.Ping(); err != nill {
+            return nil, err 
+        }
+        return db, nil
+    }
+
+There're a few things about this code which are interesting: 
+1. Notice how the import path for our drive is prefixed with an underscoe? This is because our main.go
+   file doesn't actually use anything in the mysql package. So if we try to import it normally the Go
+   compiler will raise an error. However, we need the driver's init() function to run so that it can
+   registr itself with the database/sql package. The trick to getting around this is to alias the
+   package name to the blank identifier. This is standard practice for most of Go's SQL drivers. 
+
+2. The sql.Open()
+
+For now, we'll create a skeleton database model and have it return a bit of dummy data. It won't do
+much, but I'd like to explain the pattern before we get into the nitty-gritty of SQL queries. 
+
+## Designing a database model 
+
+In this chapter we're going to sketch out a database model for our project. 
+
+If you don't like the term model, you might want to think it as a service layer or data access layer
+instead. Whatever you prefer to call it, the idea is tha we will encapsulate the code for working with
+MySQL in a separate package to the rest of our application. 
