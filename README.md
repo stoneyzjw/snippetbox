@@ -330,3 +330,18 @@ As soon as we begin adding dynamic behavior to our HTML templates there's a risk
 runtime errors. 
 
 Let's add a deliberate error to the **view.tmpl** template and see wht happens.
+
+## Common dynamic data 
+
+In some web applications there may be common dynamic data that you want to include on more than one -
+or even every - webpage. For example, you might want to include the name and profile picture of the
+current user, or a CSRF token in all pages with forms. 
+
+In our case let's begin with something simple, and say that we want to include the current year in the
+footer on every page. 
+
+To do this we'll begin by adding a new CurrentYear field to the templateData struct, like so.
+
+The next step is to add a **newTemplateData()** helper method to our application, which will return a
+**templateData** struct initialized with the current year. 
+

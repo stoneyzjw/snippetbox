@@ -57,6 +57,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
  * to it as the build progress. 
  */ 
 type templateData struct {
-    Snippet *models.Snippet
-    Snippets []*models.Snippet
+    CurrentYear     int
+    Snippet         *models.Snippet
+    Snippets        []*models.Snippet
 }
