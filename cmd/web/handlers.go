@@ -97,7 +97,8 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
  */
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
     // Use r.Method to check whether the request is using POST or not. 
-    if r.Method != "POST" {
+    // if r.Method != "POST" {
+    if r.Method != http.MethodPost {
         /* If it's not, use the w.WriteHeader() method to send a 405 status 
          * code and the w.Write() method to write a "Method Not Allowed" 
          * response body. We then return from the function so that the 
@@ -110,6 +111,24 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
         // w.Write([]byte("Method Not Allowed\n"))
         return
     }
-    w.Write([]byte("Write a new snippet\n"))
+    /*
+     * Create some variables holding dummy data. We'll remove these later on 
+     * during the build. 
+     */ 
+    title := "0 snail"
+    content := "0 snail\nClimb Mount Fuji, \nBut slowly, slowly!\n\n- Kobayashi Issa" 
+    expires := 7
+    /*
+     * Pass the data to the SnippetModel.Insert() method, receiving the 
+     * ID of the new record back. 
+     */ 
+    id, err := app.snippets.Insert(title, content, expires)
+    if err != nil {
+        app.serverError(w, err) 
+        return
+    }
+    /* Redirect the user to the relevant page for the snippet. */ 
+    http.Redirect(w, r, fmt.Sprintf("/snippet/view?id=%d", id), http.StatusSeeOther)
+    // w.Write([]byte("Write a new snippet\n"))
 }
 
