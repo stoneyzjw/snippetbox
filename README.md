@@ -345,3 +345,15 @@ To do this we'll begin by adding a new CurrentYear field to the templateData str
 The next step is to add a **newTemplateData()** helper method to our application, which will return a
 **templateData** struct initialized with the current year. 
 
+## Custom template functions 
+
+In the last part of this section about templating and dynamic data, I'd like to explain how to create
+your own custom functions to use in Go templtes. 
+
+To illustrate this, let's create a custom **humanDate()** function which outputs datatimes in a nice
+'humanized' format like 02 Jan 2022 at 15:04, instead of outputing dates in the default format of
+2022-01-02 15:04:00 +0000 UTC like we are currently 
+
+There are two steps to do this: 
+1. We need to create a template.FuncMap object containing the custom **humanDate()** function 
+2. We need to use the **template.Funcs()** method to register this before parsing the templates. 
