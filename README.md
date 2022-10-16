@@ -324,3 +324,9 @@ previous chapter. Go ahead and update it like so:
 ## Caching templates
 Before we add any more functionality to our HTML templates, it's good time to make some optimizations
 to our codebase. There are two main at the moment: 
+
+## Catching runtime errors 
+As soon as we begin adding dynamic behavior to our HTML templates there's a risk of encountering
+runtime errors. 
+
+Let's add a deliberate error to the **view.tmpl** template and see wht happens.
