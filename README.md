@@ -280,7 +280,7 @@ In this section we're going to look at the template actions and functions that G
 We've already talked about some of the actions - {{define}}, {{template}} and {{block}} - but there are
 three more which you can use to control the display of dynamic data - {{if}}, {{with}} and {{range}}. 
 
-|Action <img width=200/>|Description |
+|Action <img width=300/>|Description <img width=500/>|
 |:----|:---|
 |{{if .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty then render the content C1, otherwise render the content C2.|
 |{{with .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty, then set dot to the value of **.Foo** and render the content C1, otherwise render the content C2. |
@@ -301,7 +301,7 @@ The **html/template** package also provides some template functions which you ca
 logic to your templates and control what is rendered at runtime. You can find a complete listing of
 functions here, but the most important ones are: 
 
-|Function<img width=200/>| Description |
+|Function<img width=300/>| Description <img width=500/>|
 |:----|:----|
 |{{eq .Foo .Bar}} | Yields true if **.Foo** is equal to **.Bar** |
 |{{ne .Foo .Bar}} | Yields true if **.Foo** is not equal to **.Bar** |
