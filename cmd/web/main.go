@@ -6,6 +6,7 @@ import (
     "flag"
     "log"
     "net/http"
+    "html/template"
     "os"
     /* 
      * Import the models package that we just created. You need to prefix this with 
@@ -27,6 +28,7 @@ type application struct {
     errorLog    *log.Logger 
     infoLog     *log.Logger
     snippets    *models.SnippetModel
+    templateCache map[string]*template.Template
 }
 
 func main() {
@@ -80,6 +82,12 @@ func main() {
      */
     defer db.Close()
 
+    // Initialize a new template cache ... 
+    templateCache, err := newTemplateCache() 
+    if err != nil {
+        errorLog.Fatal(err)
+    }
+
     /* 
      * Initialize a new instance of our application struct, containing the 
      * dependencies. 
@@ -88,6 +96,7 @@ func main() {
         errorLog:  errorLog, 
         infoLog:   infoLog,
         snippets:  &models.SnippetModel{DB: db},
+        templateCache: templateCache, 
     }
 
     /*

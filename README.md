@@ -321,3 +321,6 @@ Variable names must be prefixed by a dollar sign and can contain alphanumeric ch
 A good opportunity to use the **{{with}}** action is the **view.tmpl** file that we created in the
 previous chapter. Go ahead and update it like so: 
 
+## Caching templates
+Before we add any more functionality to our HTML templates, it's good time to make some optimizations
+to our codebase. There are two main at the moment: 
