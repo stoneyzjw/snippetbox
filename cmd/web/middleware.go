@@ -1,8 +1,32 @@
 package main 
 
 import (
+    "fmt"
     "net/http"
 )
+
+func (app *application) recoverPanic(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        /* 
+         * Create a deferred function (which will always be run in the event 
+         * of a panic as Go unwids the stack). 
+         */
+        defer func() {
+            /*
+             * Use the builtin recover fucntion to check if there has been a 
+             * panic or not. If there has ...
+             */
+            if err := recover(); err != nil {
+                // Set a "connection: close" header on the respose
+                w.Header().Set("Connection", "close")
+                // Call the app.serverError helper method to return a 500 
+                // Internal Server response. 
+                app.serverError(w, fmt.Errorf("%s", err))
+            }
+        }()
+        next.ServeHTTP(w, r)
+    })
+}
 
 func secureHeaders(next http.Handler) http.Handler {
     return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request) {
