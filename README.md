@@ -272,3 +272,59 @@ In this chapter we're going to sketch out a database model for our project.
 If you don't like the term model, you might want to think it as a service layer or data access layer
 instead. Whatever you prefer to call it, the idea is tha we will encapsulate the code for working with
 MySQL in a separate package to the rest of our application. 
+
+## Template actions and functions 
+
+In this section we're going to look at the template actions and functions that Go provides. 
+
+We've already talked about some of the actions - {{define}}, {{template}} and {{block}} - but there are
+three more which you can use to control the display of dynamic data - {{if}}, {{with}} and {{range}}. 
+
+|Action |Description |
+|:----|:---|
+|{{if .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty then render the content C1, otherwise
+render the content C2.|
+|{{with .Foo}} C1 {{else}} C2 {{end}} | If **.Foo** is not empty, then set dot to the value of **.Foo**
+and render the content C1, otherwise render the content C2. |
+|{{range .Foo}} C1 {{else}} C2 {{end}} | If the length of **.Foo** is greater than zero then loop over
+each element, setting dot to the value of each element and rendering the content C1. If the length of
+**.Foo** is zero then renader the content C2. The underlying type of **.Foo** must be an array, slice,
+map, or channel. |
+
+There are a few things about these actions to point out: 
+1. For all three actions the {{else}} clause is optional. For instance, you can write {{if .Foo}} C1
+   {{end}} if there's no C2 content that you want to render. 
+
+2. The empty values are false, 0, any nil pointer or interface value, and any array, slice, map, or
+   string of length zero. 
+
+3. It's important to grasp that the **with** and **range** actions change the value of dot. Once you
+   start using them, what dot represent can be different depending on where you are in the template and
+   what you're doing. 
+
+The **html/template** package also provides some template functions which you can use to add extra
+logic to your templates and control what is rendered at runtime. You can find a complete listing of
+functions here, but the most important ones are: 
+
+|Function | Description |
+|:----|:----|
+|{{eq .Foo .Bar}} | Yields true if **.Foo** is equal to **.Bar** |
+|{{ne .Foo .Bar}} | Yields true if **.Foo** is not equal to **.Bar** |
+|{{not .Foo}} | Yields the boolean negation of **.Foo** | 
+|{{or .Foo .Bar}} | Yields **.Foo** if **.Foo** is not empty; otherwise yields **.Bar** |
+|{{index .Foo i}} | Yields the value of **.Foo** at index **i**. The underlying type of **.Foo** must
+be a map, slice or array, and **i** must be an integer value. |
+|{{printf "%s-%s" .Foo .Bar}} | Yields a formatted string containing the **.Foo** and **.Bar** alues.
+Works in the same way as fmt.Sprintf(). |
+|{{len .Foo}} | Yields the length of **.Foo** as an integer. |
+|{{$bar := len .Foo}} | Assign the length of **.Foo** to the template variable **$bar** |
+
+The final row is an example of declaring a template variable. Template variables are particularly
+useful if you want to store the result from a function and use it in multiple places in your template.
+Variable names must be prefixed by a dollar sign and can contain alphanumeric characters only.  
+
+## Using the with action 
+
+A good opportunity to use the **{{with}}** action is the **view.tmpl** file that we created in the
+previous chapter. Go ahead and update it like so: 
+
