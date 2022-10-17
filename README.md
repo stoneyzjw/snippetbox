@@ -394,3 +394,31 @@ guidance.
 Let's continue in the same vein and add some middleware to log HTTP requests. Specifically, we're going
 to use the information logger that we created earlier to record the IP address of the user, and which
 URL and method are being requested. 
+
+# CHAPTER 7 
+
+# Advanced routing 
+
+In the next section of this book we're going to add a HTML form to our application so that users can create
+new snippets. 
+
+To make this work smoothly we'll first need to update our application routes so that requests to
+/snippet/create are handled differently based on the request method. Specifically: 
+1. For GET /snippet/create requests we want to show the user the HTML form for adding a new snippet. 
+2. For POST /snippet/create requests we want to process this form data and then insert a new snippet record
+   into our database. 
+
+Essentially, we want to rejig our application routes and handles so that they end up looking like this: 
+| Method | Pattern | Handler | Action |
+|:-------|:--------|:--------|:-------|
+| GET | / | home | Display the home page |
+| GET | /snippet/view/:id | snippetView | Display a specific snippet |
+| GET | /snippet/create | snippetCreate | Display a HTML form for creating a new snippet |
+| POST | /snippet/create | snippetCreatePost | Create a new snippet |
+
+## Choosing a router 
+Ther a literally hundreds of third-party routers for Go to pick from. And (fortunately for unfortunately,
+depending on your perspective) they all work a bit differently. They have different APIs, different logic for
+matching routes, and different behavioral quirks. 
+
+Out of all the third-party routers I've tried there are three that I recommend as a starting point:
