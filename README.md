@@ -468,3 +468,13 @@ display of flash messages, so that any message is automatically included the nex
 
 We can do this by adding any flash message to the template data via the newTemplateData() helper method that
 we made earlier, like so: 
+
+## Generating a self-signed TLS certifiate 
+
+HTTPS is essentially HTTP sent across a TLS (Transport Layer Security) connection. Because it's sent over a
+TLS connection the data is encrypted and signed, which helps ensure its privacy and integrity during transit. 
+
+If you're not familiar with the term, TLS is essentially the modern version of SSL (Secure Socket Layer). SSL
+now has been offically deprecated due to security concerns, but the name still lives on in the public
+consciousness and is often used interoperably with TLS. For clarity and accuracy, we'll stick with the term
+TLS throughout this book. 
