@@ -3,6 +3,7 @@ package main
 import (
     "database/sql"
     _ "github.com/go-sql-driver/mysql" 
+    "github.com/go-playground/form/v4"
     "flag"
     "log"
     "net/http"
@@ -29,6 +30,8 @@ type application struct {
     infoLog     *log.Logger
     snippets    *models.SnippetModel
     templateCache map[string]*template.Template
+    // Add a formDecorder field to hold a pointer to a form.Decorder instance
+    formDecoder *form.Decoder
 }
 
 func main() {
@@ -88,6 +91,9 @@ func main() {
         errorLog.Fatal(err)
     }
 
+    // Initialize a decoder instance ... 
+    formDecoder := form.NewDecoder() 
+
     /* 
      * Initialize a new instance of our application struct, containing the 
      * dependencies. 
@@ -97,6 +103,7 @@ func main() {
         infoLog:   infoLog,
         snippets:  &models.SnippetModel{DB: db},
         templateCache: templateCache, 
+        formDecoder: formDecoder,
     }
 
     /*
