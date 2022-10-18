@@ -460,3 +460,11 @@ message between HTTP request that we discussed earlier.
 
 We'll begin in our cmd/web/handlers.go file and update our snippetCreatePost so that a flash message is added
 to the user's session data if - and only if - the snippet was created successfully. Like so. 
+
+## Auto-displaying flash messages
+
+A little improvement we can make (which will save us some work later in the project) is to automate the
+display of flash messages, so that any message is automatically included the next time any page is rendered. 
+
+We can do this by adding any flash message to the template data via the newTemplateData() helper method that
+we made earlier, like so: 
