@@ -69,6 +69,13 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
         }
         return 
     }
+	/* 
+	 * Use the PopString() method to retrieve the value for the "flash" key. 
+	 * PopString() also deletes the key and value from the session data, so it 
+	 * acts like a one-time fetch. If there is no matching key in the session 
+	 * data this will return the empty string.
+	 */
+	flash := app.sessionManager.PopString(r.Context(), "flash")
     /* 
      * Call the newTemplateData() helper to get a templateData struct containing 
      * the 'default' data (which for now is just the current year), and add the 
@@ -76,6 +83,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
      */ 
     data := app.newTemplateData(r)
     data.Snippet = snippet
+	data.Flash = flash
     // Use the new render helper 
     app.render(w, http.StatusOK, "view.tmpl", data)
 }
@@ -167,6 +175,10 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
         app.serverError(w, err)
         return
     }
+
+	// Use the Put() method to add a string value ("Snippet successfully 
+	// created!") and the corresponding key ("flash") to the session data. 
+	app.sessionManager.Put(r.Context(), "flash", "Snippet successfully created!")
 
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }

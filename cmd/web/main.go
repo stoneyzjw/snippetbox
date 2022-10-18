@@ -8,6 +8,7 @@ import (
     "net/http"
     "html/template"
     "os"
+	"time"
     /* 
      * Import the models package that we just created. You need to prefix this with 
      * whatever model path you set up back in chapter 02.01 (Project Setup and Creating
@@ -16,7 +17,8 @@ import (
      * used, you can find it at the top of the go.mod file. 
      */
     "github.com/stoneyzjw/snippetbox/internal/models"
-    _ "github.com/go-sql-driver/mysql"
+	"github.com/alexedwards/scs/mysqlstore" 
+	"github.com/alexedwards/scs/v2"
 )
 
 /* 
@@ -29,6 +31,7 @@ type application struct {
     infoLog     *log.Logger
     snippets    *models.SnippetModel
     templateCache map[string]*template.Template
+	sessionManager *scs.SessionManager
 }
 
 func main() {
@@ -88,6 +91,10 @@ func main() {
         errorLog.Fatal(err)
     }
 
+	sessionManager := scs.New() 
+	sessionManager.Store = mysqlstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+
     /* 
      * Initialize a new instance of our application struct, containing the 
      * dependencies. 
@@ -97,6 +104,7 @@ func main() {
         infoLog:   infoLog,
         snippets:  &models.SnippetModel{DB: db},
         templateCache: templateCache, 
+		sessionManager: sessionManager,
     }
 
     /*
