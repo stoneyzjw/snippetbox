@@ -9,6 +9,7 @@ import (
     "net/http"
     "html/template"
     "os"
+	"time"
     /* 
      * Import the models package that we just created. You need to prefix this with 
      * whatever model path you set up back in chapter 02.01 (Project Setup and Creating
@@ -17,7 +18,8 @@ import (
      * used, you can find it at the top of the go.mod file. 
      */
     "github.com/stoneyzjw/snippetbox/internal/models"
-    _ "github.com/go-sql-driver/mysql"
+	"github.com/alexedwards/scs/mysqlstore" 
+	"github.com/alexedwards/scs/v2"
 )
 
 /* 
@@ -32,6 +34,7 @@ type application struct {
     templateCache map[string]*template.Template
     // Add a formDecorder field to hold a pointer to a form.Decorder instance
     formDecoder *form.Decoder
+	sessionManager *scs.SessionManager
 }
 
 func main() {
@@ -93,6 +96,16 @@ func main() {
 
     // Initialize a decoder instance ... 
     formDecoder := form.NewDecoder() 
+	sessionManager := scs.New() 
+	sessionManager.Store = mysqlstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+	/*
+	 * Make sure that the Secure attribute is set on our session cookies. 
+	 * Setting this means that the cookie will only be sent by a user's web 
+	 * browser when a HTTPS connection is being used (and won't be sent over an 
+	 * unsecure HTTP connection). 
+	 */
+	sessionManager.Cookie.Secure = true
 
     /* 
      * Initialize a new instance of our application struct, containing the 
@@ -104,6 +117,7 @@ func main() {
         snippets:  &models.SnippetModel{DB: db},
         templateCache: templateCache, 
         formDecoder: formDecoder,
+		sessionManager: sessionManager,
     }
 
     /*
@@ -123,8 +137,14 @@ func main() {
       * to ue the assignment operator = here, instead of the := 'declare and assign' 
       * operator. 
       */
-     err = srv.ListenAndServe() 
-     errorLog.Fatal(err)
+     // err = srv.ListenAndServe()
+	 /* 
+	  * Use the ListenAndServerTLS() method to start the HTTPS server. We 
+	  * pass in the paths to the TLS certificate and corresponding private key as 
+	  * the two parameters. 
+	  */
+	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
+    errorLog.Fatal(err)
 
 }
 
