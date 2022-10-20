@@ -31,6 +31,7 @@ type application struct {
     errorLog    *log.Logger 
     infoLog     *log.Logger
     snippets    *models.SnippetModel
+    users       *models.UserModel
     templateCache map[string]*template.Template
     // Add a formDecorder field to hold a pointer to a form.Decorder instance
     formDecoder *form.Decoder
@@ -115,6 +116,7 @@ func main() {
         errorLog:  errorLog, 
         infoLog:   infoLog,
         snippets:  &models.SnippetModel{DB: db},
+        users:  &models.UserModel{DB: db},
         templateCache: templateCache, 
         formDecoder: formDecoder,
 		sessionManager: sessionManager,

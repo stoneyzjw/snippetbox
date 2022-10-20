@@ -488,3 +488,34 @@ the snippets, and will also be able to sign up for an account.
 
 For our application, the process will work like this: 
 
+## User authentication 
+
+In this section of the book we're going to add some user authenticatioin functionality to our
+application, so that only registered, logged-in users can create new snippets. Non-logged-in users will
+still be able to view the snippets, and will also be able to sign up for an account.
+For our application, the process will work like this: 
+
+1. A user will register by visiting a form at /user/signup and entering their name, email address and
+   password. We'll store this information in a new users database table (which we'll create in a
+   moment).
+
+2. A user will log in by visiting a form at /user/login and entering their email address and password. 
+
+3. We will then check the database to see if the email and password they entered match one of the users
+   in the users table. If there's a match, the user has authenticated successfully and we add the
+   relevant id value for the user to their session data, using the key "authenticatedUserID".
+
+4. When we recieve any subsequent requests, we can check the user's session data for a
+   "authenticatedUserID" value. If it exists, we know that the user has already successfully logged in.
+   We can keep checking this until the session expires, when the user will need to log in again. 
+
+## Routes Setup 
+
+Let's begin this section by adding five new routes to our application, so that it looks like this: 
+
+| Method | Pattern | Handler | Action |
+|:---|:----|:----|:---|:----|
+| GET | / | home | Display the home page |
+| GET | /snippet/view/:id | snippetView | Display a specific snippet | 
+| GET | /snippet/create | snippetCreate | Display a HTML form for creating a new snippet |                
+

@@ -24,6 +24,14 @@ type snippetCreateForm struct {
     validator.Validator     `form:"-"`
 }
 
+// Create a new userSignupFor struct. 
+type userSignupForm struct {
+    Name                string `form:"name"`
+    Email               string `form:"email"`
+    Password            string `form:"password"`
+    validator.Validator `form:"-"`
+}
+
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// Because httprouter matches the "/" path exactly, we can now remove the 
 	// manual check of r.URL.Path != "/" from this handler 
@@ -144,7 +152,9 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 }
 
 func (app *application) userSignup(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display a HTML form for signing up a new user...")
+    data := app.newTemplateData(r)
+    data.Form = userSignupForm{}
+    app.render(w, http.StatusOK, "signup.tmpl", data)
 }
 
 func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
